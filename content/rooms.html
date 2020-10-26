@@ -1,0 +1,66 @@
+<!-- Meta tags -->
+<script>
+    document.title = 'Aulas'
+</script>
+
+<!-- Content -->
+<!--<main>-->
+    <h1>Aulas</h1>
+    <hr>
+    <br><br>
+    <div id="rooms"></div>
+<!--</main>-->
+
+<!-- Styles -->
+<style>
+    #rooms {
+        margin: auto;
+        width: 90%;
+        max-width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #rooms > a {
+        opacity: 0;
+        transform: translateY(10%);
+        transition: opacity, transform;
+        transition-duration: .6s;
+        transition-timing-function: ease;
+    }
+
+    #rooms button {
+        color: var(--fg-color);
+        width: 250px;
+        margin: 20px;
+        font-size: 20px;
+        text-align: left;
+        padding: 30px;
+        font-weight: bold;
+        background-image: url(/content/img/rooms.svg);
+        background-position: center right 20px;
+        background-repeat: no-repeat;
+        background-size: auto 50%;
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+  __ETHENIS.onLoadOnce = () => {
+    const roomsWrapper = $('#rooms')
+    let timeout = 1;
+    thingsboard.api.assets.getUserAssets().then((rooms = []) => rooms.forEach(room => {
+      const roomElement = Object.assign(document.createElement('A'), {
+        href: `/dashboard/${room}`,
+        innerHTML: `<button>${room}</button>`
+      })
+      setTimeout(() => {
+        roomElement.style.opacity = 1
+        roomElement.style.transform = 'unset'
+      }, 200 * timeout++)
+      roomsWrapper.appendChild(roomElement)
+      __ETHENIS.loadLinks(roomElement)
+    }))
+  }
+</script>

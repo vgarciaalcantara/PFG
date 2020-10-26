@@ -1,0 +1,151 @@
+@font-face {
+  font-family: 'Cantarell Extra Bold';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url(/css/Cantarell-ExtraBold.otf); }
+
+body {
+    background: url('/content/img/leaves.png') no-repeat top right;
+}
+
+
+body::after {
+    content: '';
+    display: block;
+    position: fixed;
+    bottom: -40px;
+    left: -40px;
+    height: 160px;
+    width: calc(100% + 80px);
+    z-index: 999;
+    background: var(--bg-color);
+    filter: blur(20px);
+}
+
+@keyframes loading-element {
+    0% {
+        width: 0;
+    }
+    5% {
+        transform: none;
+        width: 20%;
+    }
+    10% {
+        transform: translateX(20vw);
+        width: 4px;
+    }
+    35% {
+        transform: translateX(80vw);
+        width: 4px;
+    }
+    40% {
+        width: 30%;
+        transform: translateX(80vw);
+    }
+    45% {
+        transform: translateX(110vw);
+    }
+    46% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: hidden;
+    }
+}
+
+body.loading #loading-animation div {
+    display: block;
+}
+
+#loading-animation div {
+    left: 0;
+    top: 4px;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    height: 4px;
+    border-radius: 4px;
+    background: #1875D1;
+    box-shadow: 0 1px 0 #08005c;
+    animation: loading-element 5s infinite;
+}
+#loading-animation div:nth-child(2) {
+    margin-left: -8px;
+    animation-delay: .25s;
+}
+#loading-animation div:nth-child(3) {
+    margin-left: -16px;
+    animation-delay: .5s;
+}
+#loading-animation div:nth-child(4) {
+    margin-left: -24px;
+    animation-delay: .75s;
+}
+#loading-animation div:nth-child(5) {
+    margin-left: -32px;
+    animation-delay: 1s;
+}
+
+main {
+    margin: 20px 0;
+    padding-bottom: 90px;
+}
+
+main h1 { text-align: center; }
+
+@media (max-width: 400px) {
+    main h1 { font-size: 3em; }
+}
+
+nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    height: 18vw;
+    max-width: 350px;
+    max-height: 70px;
+    border-radius: 18px;
+    background-color: rgba(237, 238, 243, .95);
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.01),
+        1px 1px 1px rgba(255, 255, 255, 0.1),
+        inset 1px 1px 1px rgba(0, 0, 0, 0.05),
+        inset -1px -1px 3px white;
+    z-index: 1000;
+}
+
+nav > div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+nav a {
+    width: 16%;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1),
+        -1px -1px 4px white;
+    border-radius: 12px;
+    background-color: #edeef3;
+    transition: box-shadow .2s;
+}
+
+nav a:active, nav a.__eth-selected-link {
+    box-shadow: 0 0 transparent,
+        0 0 transparent,
+        inset 1px 1px 4px rgba(0, 0, 0, 0.1),
+        inset -2px -2px 4px white;
+    background: var(--bg-color);
+}
+
+nav a > div {
+    height: 100%;
+    padding-top: 100%;
+    background: var(--icon) center no-repeat;
+    background-size: 60%;
+    filter: drop-shadow(0 3px rgba(0,0,0,.2));
+}
+

@@ -1,0 +1,59 @@
+<!-- Meta tags -->
+<script>
+    document.title = 'Login'
+</script>
+
+<!-- Content -->
+<form id="login">
+    <h1>Login</h1>
+    <input type="email" name="user" placeholder="Usuario">
+    <input type="password" placeholder="Contraseña"><!--
+ --><input type="submit" value="Entrar" class="blue-button">
+    <br><br>
+    <a href="/" class="__eth-link">← Volver a inicio</a>
+</form>
+
+<!-- Styles -->
+<style>
+    main {}
+
+    #login {
+        width: 300px;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    #login h1 { margin: 0 auto 10px; }
+    #login input[type=email] { width: 100%; }
+    #login input[type=password] {
+        width: calc(100% - 9em); }
+    #login input[type=submit] { margin-left: 1em; }
+
+    #login a { margin-left: 7px; }
+
+    nav { display: none; }
+</style>
+
+<!-- Scripts -->
+<script>
+  __ETHENIS.onLoadOnce = () => {
+    $('#login').onsubmit = e => {
+      e.preventDefault()
+      const user = $('input[name=user]').value
+      const password = $('input[type=password').value
+      if (!user || ! password)
+        return
+      thingsboard.api.auth.login(user, password)
+        .then(token => {
+          if (!!token) {
+            __ETHENIS.loadPage('/dashboard')
+            thingsboard.authToken = token
+            localStorage.setItem('token', thingsboard.authToken)
+          } else {
+            alert('Login incorrecto')
+          }
+        })
+    }
+  }
+</script>

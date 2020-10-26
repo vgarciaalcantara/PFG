@@ -1,0 +1,27 @@
+<!-- Meta tags -->
+<script>
+    document.title = 'Configuración'
+</script>
+
+<!-- Content -->
+<!--<main>-->
+    <h1>Configuración</h1>
+    <hr>
+    <button id="logout" class="red-button">Cerrar Sesión</button>
+<!--</main>-->
+
+<!-- Styles -->
+<style>
+    #logout {
+        width: 200px;
+        margin: 60px auto;
+        display: block;
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+  __ETHENIS.onLoadOnce = () => {
+    $('#logout').onclick = thingsboard.api.auth.logout
+  }
+</script>

@@ -1,0 +1,238 @@
+<div>
+    <div id="dashboard" class="paper">
+        <div id="dashboard-buttons">
+            <div style="background-image:url(/content/img/co2-icon.svg)" class="active"></div>
+            <div style="background-image:url(/content/img/water-icon.svg)"></div>
+            <div style="background-image:url(/content/img/energy-icon.svg)"></div>
+            <div style="background-image:url(/content/img/pollution-icon.svg)"></div>
+            <div style="background-image:url(/content/img/noise-icon.svg)"></div>
+        </div>
+        <div id="chart">
+            <canvas></canvas>
+        </div>
+        <canvas></canvas>
+    </div>
+</div>
+
+<style>
+    #dashboard {
+        width: 90vw;
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        max-width: 600px;
+        position: relative;
+        padding: 0;
+    }
+
+    #dashboard::before {
+        content: '';
+        display: block;
+        padding-bottom: 75%;
+    }
+
+    #dashboard-buttons {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        height: 18vw;
+        max-width: 350px;
+        max-height: 70px;
+        border-radius: 18px;
+        background-color: rgba(237, 238, 243, .95);
+        box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.01),
+            1px 1px 1px rgba(255, 255, 255, 0.1),
+            inset 1px 1px 1px rgba(0, 0, 0, 0.05),
+            inset -1px -1px 3px white;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    #dashboard-buttons div {
+        width: 16%;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1),
+            -1px -1px 4px white;
+        border-radius: 12px;
+        background-color: #edeef3;
+        transition: box-shadow .2s;
+        cursor: pointer;
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+
+    #dashboard-buttons div:active, #dashboard-buttons div.active {
+        box-shadow: 0 0 transparent,
+            0 0 transparent,
+            inset 1px 1px 4px rgba(0, 0, 0, 0.1),
+            inset -2px -2px 4px white;
+        background-color: var(--bg-color);
+    }
+
+    #dashboard-buttons div::after {
+        display: block;
+        content: '';
+        height: 100%;
+        padding-top: 100%;
+        background: var(--icon) center no-repeat;
+        background-size: 60%;
+        filter: drop-shadow(0 3px rgba(0,0,0,.2));
+    }
+
+    #dashboard > canvas {
+        position: absolute;
+        top: -10px;
+        height: calc(100% + 20px);
+        width: calc(100% + 40px);
+        border-radius: 0 100px 100px 0;
+        opacity: 0;
+        transition: opacity .6s;
+        transform: scaleY(.92);
+    }
+
+    #chart {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        overflow: hidden;
+        border-radius: 20px;
+    }
+
+    #chart > canvas {
+        position: absolute;
+        height: calc(100% + 20px)!important;
+        width: calc(100% + 40px)!important;
+        left: -40px;
+        top: -10px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script>
+  dashboardChart = {
+    chartData: {
+      co2: {
+        data: [],
+        gradientStart: '#19a187',
+        gradientEnd: '#087142'
+      },
+      water: {
+        data: [],
+        gradientStart: '#23bac2',
+        gradientEnd: '#3b6ab9'
+      },
+      energy: {
+        data: [],
+        gradientStart: '#ffc730',
+        gradientEnd: '#fd7d00'
+      },
+      pollution: {
+        data: [],
+        gradientStart: '#e6e6e6',
+        gradientEnd: '#80c6ed'
+      },
+      noise: {
+        data: [],
+        gradientStart: '#fd3535',
+        gradientEnd: '#367bf0'
+      }
+    },
+
+    drawChart: ({ data, gradientStart, gradientEnd }) => {
+      // Reset canvas elements
+      $('#chart canvas').remove()
+      $('#dashboard > canvas').remove()
+      $('#chart').appendChild(document.createElement('canvas'))
+      $('#dashboard').appendChild(document.createElement('canvas'))
+
+      const chartContext = $('#chart canvas').getContext("2d")
+
+      const gradientStroke = chartContext.createLinearGradient(0, 200, 0, 700)
+      gradientStroke.addColorStop(0, gradientStart + 'e0')
+      gradientStroke.addColorStop(1, gradientEnd + 'e0')
+
+      new Chart(chartContext, {
+        type: 'line',
+        data: {
+          labels: [1, 2, 3, 4, 5, 6, 7],
+          datasets: [{
+            borderColor: 'transparent',
+            pointRadius: 0,
+            fill: true,
+            backgroundColor: gradientStroke,
+            data: data.slice(7, 14)
+          },
+          {
+            borderColor: 'transparent',
+            pointRadius: 0,
+            fill: true,
+            backgroundColor: '#cbcfdf',
+            data: data.slice(0, 7)
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 0,
+                suggestedMax: 200,
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                  display: false
+              }
+            }]
+          },
+          animation: {
+            onComplete: () => {
+              const scalesCanvas = $('#dashboard > canvas')
+              if (scalesCanvas) {
+                const context = scalesCanvas.getContext('2d')
+                scalesCanvas.width = $('#chart canvas').width
+                scalesCanvas.height = $('#chart canvas').height
+                context.putImageData(chartContext.getImageData(0, 0, 30 * window.devicePixelRatio, scalesCanvas.height), 0, 0)
+                scalesCanvas.style.opacity = .5
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Chart tabs behaviour
+  $$('#dashboard-buttons div').forEach((button, i) => {
+    button.onclick = () => {
+      $$('#dashboard-buttons div').forEach(e => { e.className = '' })
+      button.className = 'active'
+      switch (i) {
+        case 0: // co2
+          dashboardChart.drawChart(dashboardChart.chartData.co2)
+          break
+        case 1: // water
+          dashboardChart.drawChart(dashboardChart.chartData.water)
+          break
+        case 2: // energy
+          dashboardChart.drawChart(dashboardChart.chartData.energy)
+          break
+        case 3: // pollution
+          dashboardChart.drawChart(dashboardChart.chartData.pollution)
+          break
+        case 4: // noise
+          dashboardChart.drawChart(dashboardChart.chartData.noise)
+          break
+      }
+    }
+  })
+</script>

@@ -1,0 +1,13 @@
+{
+    "fadeAnimationDuration" : 300,
+    "scrollAnimationDuration" : 100,
+    "content" : {
+        "" : ["stats.php", "stats"],
+        "rooms" : ["rooms.html", "rooms"],
+        "dashboard" : ["dashboard.php", "dashboard"],
+        "/^dashboard\/.+$/" : ["dashboard.php"],
+        "settings" : ["settings.html", "settings"],
+        "login" : ["login.html"]
+    },
+    "404" : "404.html"
+}
